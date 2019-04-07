@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+
+#Order Form Routes
+GET     /                           controllers.HomeController.showOrderForm()
++ nocsrf
+POST    /postitems                  controllers.APIController.postListOfItems()
+
++ nocsrf
+POST    /updateStock                controllers.APIController.upateStockInfo()
+
+GET     /getStock                   controllers.APIController.getStock()
+
+#List of Orders Routes
+GET     /showlistOfOrders           controllers.HomeController.showListOfOrders()
+
+GET     /getListOfOrders            controllers.APIController.getListOfOrders()
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(file)
+
+

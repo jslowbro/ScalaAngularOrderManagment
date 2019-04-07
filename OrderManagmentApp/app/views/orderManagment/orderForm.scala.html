@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title> Order Form </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+        <style>
+            table, th , td  {
+                border: 1px solid grey;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+            table tr:nth-child(odd) {
+                background-color: #f1f1f1;
+            }
+            table tr:nth-child(even) {
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div ng-app="OrderFormApp" ng-controller="mainCtrl" class="container">
+            <div class="JumboTron" style="background-color: 	#6fa17b; padding: 40px; border-radius: 25px;">
+                <h1> Place an order </h1>
+                <p> Using this view you choose the desired items and place an order. </p>
+                    <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/showlistOfOrders" style="border-radius: 10px; color: black; font-weight: bold" > See all orders </a>
+                    </li>
+                    </ul>
+            <div class="row">
+                <div class="col-sm-4" style="background-color:	#e7d6b2;padding: 10px; border-radius: 25px;">
+                    <div class="classWithPad">
+                    <label style="font-size: 20px"> Choose an Item </label>
+                    <form name="myForm">
+                        <p>Name :<br>
+                        <input type="text" name="name" ng-model="name" ng-pattern="nameRegex" required><br>
+                            <span style="color:red" ng-show="myForm.name.$invalid">
+                                <span ng-show="myForm.name.$error.required"> Name is required. </span><br>
+                                <span ng-show="myForm.name.$invalid"> Name must: be a single word, start with a capital letter, have 2-30 characters, no numbers or special characters </span>
+                            </span>
+                        </p>
+                        <p> Age: <br>
+                        <input type="number" name="age" ng-model="age" min="{{minAge}}" max="{{maxAge}}" required><br>
+                            <span style="color:red" ng-show="myForm.age.$invalid">
+                                <span ng-show="myForm.age.$error.required"> Age is required.</span><br>
+                                <span ng-show="myForm.age.$invalid"> Age must be between 18-100 </span>
+                            </span>
+                        </p>
+                        Color: <br>
+                        <select ng-model="colorValue" ng-options="x for x in colors"> </select><br>
+                        Size : <br>
+                        <input ng-model="sizeValue" type="radio" name="size" id="s" value="S" > S
+                        <input ng-model="sizeValue" type="radio" name="size" id="m" value="M"> M
+                        <input ng-model="sizeValue" type="radio" name="size" id="l" value="L"> L
+                        <input ng-model="sizeValue" type="radio" name="size" id="xl" value="XL" > XL
+                        <br><br>
+                        <img ng-src="@routes.Assets.versioned("images/item_configs/{{sizeValue}}-{{colorValue}}.png")" alt="SIZE-COLOR">
+                        <br><br>
+                        <button class="btn btn-success" ng-click="addItem()" ng-disabled="canAddItem() || myForm.name.$invalid || myForm.age.$invalid"> Add Item </button>
+                        <br><br>
+                    </form>
+                    </div>
+                </div>
+                <div class="col-sm-4" style=" background-color:		#ccd9ff; padding: 10px; border-radius: 25px;  ">
+                    <div class="classWithPad">
+                    <label style="font-size: 20px"> Your Order </label>
+                    <table class="table table-striped">
+                        <col>
+                        <colgroup span="5"></colgroup>
+                        <tr>
+                            <th colspan="5" scope="colgroup"> Shopping Cart </th>
+                        </tr>
+                        <tr>
+                            <th> Name </th>
+                            <th> Age </th>
+                            <th> Color </th>
+                            <th> Size </th>
+                            <th> Action </th>
+                        </tr>
+                        <tr ng-repeat="x in itemlist">
+                            <td>{{x.name}}</td>
+                            <td>{{x.age}}</td>
+                            <td>{{x.color}}</td>
+                            <td>{{x.size}}</td>
+                            <td><button class="btn btn-danger" ng-click="deleteItem(x)" > Delete </button></td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <button class="btn btn-primary" ng-click="sendData()" ng-disabled="canSendData()"> Send Order </button>
+                    </div>
+                </div>
+                <div class="col-sm-4" style="background-color:		#707a8a; padding: 10px; border-radius: 25px;">
+                    <label style="font-size: 20px"> Items In Stock </label>
+                    <table>
+                        <col>
+                        <colgroup span="3"></colgroup>
+                        <thead>
+                            <tr>
+                                <th rowspan="2" colspan="2" style="visibility: hidden"></th>
+                                <th align="center" colspan="3" scope="colgroup" > Color </th>
+                            </tr>
+                            <tr>
+                                <th scope="col"> RED </th>
+                                <th scope="col"> GREEN </th>
+                                <th scope="col"> BLUE </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th rowspan="4" scope="rowgroup" style="transform: rotate(270deg);"> Size </th>
+                                <th scope="row"> S </th>
+                                <td> {{stock[4].quantity}} </td>
+                                <td> {{stock[8].quantity}} </td>
+                                <td> {{stock[0].quantity}} </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> M </th>
+                                <td> {{stock[5].quantity}} </td>
+                                <td> {{stock[9].quantity}} </td>
+                                <td> {{stock[1].quantity}} </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> L </th>
+                                <td> {{stock[6].quantity}} </td>
+                                <td> {{stock[10].quantity}} </td>
+                                <td> {{stock[2].quantity}} </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"> XL </th>
+                                <td> {{stock[7].quantity}} </td>
+                                <td> {{stock[11].quantity}} </td>
+                                <td> {{stock[3].quantity}} </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        <script src="@routes.Assets.versioned("javascripts/orderFormController.js")"></script>
+
+    </body>
+</html>

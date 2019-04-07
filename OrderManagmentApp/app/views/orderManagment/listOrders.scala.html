@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <title> Show All Orders </title>
+        <style>
+            table, th , td  {
+                border: 1px solid grey;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+            table tr:nth-child(odd) {
+                background-color: #f1f1f1;
+            }
+            table tr:nth-child(even) {
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div ng-app="ShowOrdersApp" ng-controller="mainCtrl" class="container">
+            <div class="JumboTron" style="background-color: #6fa17b; padding: 10px; border-radius: 25px;">
+                <h1> View Previous Orders </h1>
+                <p> Using this view you can view all of the previous orders. </p>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:history.back()" style="border-radius: 10px; color: black; font-weight: bold"> Back to previous page </a>
+                    </li>
+                </ul>
+            </div>
+            <br><br>
+            <button class="btn btn-primary" ng-click="getOrders()"> Show Orders </button>
+            <br><br>
+            <table>
+                <tr>
+                    <th > Orders </th>
+                </tr>
+                <tr ng-repeat="x in orderlist">
+
+                    <td><label> No. {{x.id}} </label><br>
+                        <label> Date and Time : {{x.timestamp}} </label><br>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > List of Items
+                                <span class="caret"></span></button><br>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" ng-repeat="item in x">
+                                <a class="dropdown-item" style="display: block" ng-repeat="y in item track by $index">{{y.name}}  {{y.age}}  {{y.size}} {{y.color}}</a>
+                            </div></div>
+                    </td>
+
+                </tr>
+            </table>
+
+
+        </div>
+        @*<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/orderForm-table.css")">*@
+        <script src="@routes.Assets.versioned("javascripts/listOrdersController.js")"></script>
+
+    </body>
+</html>
